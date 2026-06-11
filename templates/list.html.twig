@@ -1,0 +1,44 @@
+{#
+ # -------------------------------------------------------------------------
+ # Simviewer plugin for GLPI — read-only SIM directory listing.
+ #
+ # Renders a single free-text search box followed by the NATIVE GLPI datatable
+ # component (components/datatable.html.twig). No bespoke <table> markup.
+ # All values are auto-escaped by Twig. (PRD FR-2 / FR-3)
+ # -------------------------------------------------------------------------
+ #}
+<div class="simviewer-list">
+    <div class="card">
+        <div class="card-body">
+            <form method="get" action="{{ self_url }}" class="mb-3" role="search">
+                <div class="input-group" style="max-width: 480px;">
+                    <span class="input-group-text"><i class="ti ti-search"></i></span>
+                    <input type="text"
+                           name="filter"
+                           value="{{ filter }}"
+                           class="form-control"
+                           placeholder="{{ __('Search by user or phone number', 'simviewer') }}"
+                           aria-label="{{ __('Search by user or phone number', 'simviewer') }}">
+                    <button type="submit" class="btn btn-primary">{{ __('Search', 'simviewer') }}</button>
+                    {% if filter is not empty %}
+                        <a href="{{ self_url }}" class="btn btn-outline-secondary">{{ __('Reset', 'simviewer') }}</a>
+                    {% endif %}
+                </div>
+            </form>
+
+            {% if phone_source == 'none' %}
+                <div class="alert alert-warning" role="alert">
+                    {{ __('The phone number field could not be located. Ask an administrator to check the SIM Viewer configuration.', 'simviewer') }}
+                </div>
+            {% endif %}
+
+            {% if datatable.entries is empty %}
+                <div class="alert alert-info" role="alert">
+                    {{ __('No SIM cards are visible to you.', 'simviewer') }}
+                </div>
+            {% else %}
+                {% include 'components/datatable.html.twig' with datatable %}
+            {% endif %}
+        </div>
+    </div>
+</div>

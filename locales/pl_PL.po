@@ -1,0 +1,79 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: SIM Viewer 1.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"Language-Team: Polish\n"
+"Language: pl_PL\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+msgid "SIM Viewer"
+msgstr "Podgląd SIM"
+
+msgid "SIM card"
+msgid_plural "SIM cards"
+msgstr[0] "Karta SIM"
+msgstr[1] "Karty SIM"
+msgstr[2] "Kart SIM"
+
+msgid "User"
+msgstr "Użytkownik"
+
+msgid "Phone number"
+msgstr "Numer telefonu"
+
+msgid "SIM serial"
+msgstr "Numer seryjny SIM"
+
+msgid "Status"
+msgstr "Status"
+
+msgid "Search by user or phone number"
+msgstr "Szukaj po użytkowniku lub numerze telefonu"
+
+msgid "Search"
+msgstr "Szukaj"
+
+msgid "Reset"
+msgstr "Wyczyść"
+
+msgid "The phone number field could not be located. Ask an administrator to check the SIM Viewer configuration."
+msgstr "Nie można odnaleźć pola z numerem telefonu. Poproś administratora o sprawdzenie konfiguracji Podglądu SIM."
+
+msgid "No SIM cards are visible to you."
+msgstr "Brak kart SIM widocznych dla Ciebie."
+
+msgid "Read"
+msgstr "Odczyt"
+
+msgid "Show SIM serial column"
+msgstr "Pokaż kolumnę numeru seryjnego SIM"
+
+msgid "Show status column"
+msgstr "Pokaż kolumnę statusu"
+
+msgid "Enable CSV export"
+msgstr "Włącz eksport CSV"
+
+msgid "Phone number source"
+msgstr "Źródło numeru telefonu"
+
+msgid "Fields plugin custom field"
+msgstr "Pole dodatkowe wtyczki Fields"
+
+msgid "Native Line object"
+msgstr "Natywny obiekt Linia"
+
+msgid "Fields container table (blank = auto-detect)"
+msgstr "Tabela kontenera Fields (puste = autowykrywanie)"
+
+msgid "Phone number column name"
+msgstr "Nazwa kolumny numeru telefonu"
+
+msgid "Line phone column name"
+msgstr "Nazwa kolumny telefonu w obiekcie Linia"
+
+msgid "Top nav-bar anchor (CSS selector)"
+msgstr "Kotwica górnego paska nawigacji (selektor CSS)"

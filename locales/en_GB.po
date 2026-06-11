@@ -1,0 +1,78 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: SIM Viewer 1.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"Language-Team: English (United Kingdom)\n"
+"Language: en_GB\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "SIM Viewer"
+msgstr "SIM Viewer"
+
+msgid "SIM card"
+msgid_plural "SIM cards"
+msgstr[0] "SIM card"
+msgstr[1] "SIM cards"
+
+msgid "User"
+msgstr "User"
+
+msgid "Phone number"
+msgstr "Phone number"
+
+msgid "SIM serial"
+msgstr "SIM serial"
+
+msgid "Status"
+msgstr "Status"
+
+msgid "Search by user or phone number"
+msgstr "Search by user or phone number"
+
+msgid "Search"
+msgstr "Search"
+
+msgid "Reset"
+msgstr "Reset"
+
+msgid "The phone number field could not be located. Ask an administrator to check the SIM Viewer configuration."
+msgstr "The phone number field could not be located. Ask an administrator to check the SIM Viewer configuration."
+
+msgid "No SIM cards are visible to you."
+msgstr "No SIM cards are visible to you."
+
+msgid "Read"
+msgstr "Read"
+
+msgid "Show SIM serial column"
+msgstr "Show SIM serial column"
+
+msgid "Show status column"
+msgstr "Show status column"
+
+msgid "Enable CSV export"
+msgstr "Enable CSV export"
+
+msgid "Phone number source"
+msgstr "Phone number source"
+
+msgid "Fields plugin custom field"
+msgstr "Fields plugin custom field"
+
+msgid "Native Line object"
+msgstr "Native Line object"
+
+msgid "Fields container table (blank = auto-detect)"
+msgstr "Fields container table (blank = auto-detect)"
+
+msgid "Phone number column name"
+msgstr "Phone number column name"
+
+msgid "Line phone column name"
+msgstr "Line phone column name"
+
+msgid "Top nav-bar anchor (CSS selector)"
+msgstr "Top nav-bar anchor (CSS selector)"
