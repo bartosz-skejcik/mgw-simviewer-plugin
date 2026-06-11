@@ -45,13 +45,15 @@ function plugin_simviewer_install(): bool
 {
     $migration = new Migration(PLUGIN_SIMVIEWER_VERSION);
 
-    // Register the dedicated plugin right on all existing profiles (no access
-    // by default — granting is an explicit admin action, see PRD §5).
-    ProfileRight::addProfileRights([Simcard::$rightname]);
-
-    // Give profiles that can update the GLPI configuration (super-admins) the
-    // READ right by default so the feature is reachable out of the box.
+    // Order matters: addRight() only creates the right for profiles that do NOT
+    // already have it. So grant READ to config managers (super-admins) FIRST,
+    // then backfill every remaining profile at 0. (Doing addProfileRights first
+    // pre-creates all rows at 0 and makes addRight a no-op.)
     $migration->addRight(Simcard::$rightname, READ, ['config' => UPDATE]);
+
+    // Register the right (at 0 — no access) on every other existing profile.
+    // Granting it to self-service profiles is an explicit admin action (PRD §5).
+    ProfileRight::addProfileRights([Simcard::$rightname]);
 
     // Seed default configuration (privacy-first defaults, see PRD §9).
     Config::install();

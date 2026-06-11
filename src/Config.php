@@ -68,9 +68,12 @@ class Config extends CommonDBTM
             'enable_export' => '0',
             // 'fields' (Fields plugin custom field) or 'line' (native Line object).
             'phone_source'  => 'fields',
-            // Empty fields_table => auto-detect the Fields plugin container table.
+            // Empty fields_table => auto-detect the Fields plugin container table
+            // (scans glpi_plugin_fields_* for one carrying the column below on
+            // the Item_DeviceSimcard itemtype). The Fields plugin mangles the
+            // declared field name "Nr telefonu" into this physical column.
             'fields_table'  => '',
-            'fields_column' => 'nr_telefonu',
+            'fields_column' => 'nrtelefonufield',
             // Native Line fallback column (the "Caller number").
             'line_column'   => 'caller_num',
             // Top nav-bar anchor for the self-service link (PRD FR-1a).
