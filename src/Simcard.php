@@ -246,10 +246,13 @@ class Simcard extends CommonDBTM
             'phone_source' => $phone['type'],
             'datatable'    => [
                 'datatable_id'        => 'simviewer_list',
-                'is_tab'              => false,
+                // No per-column filter row (the page has its own search box)
+                // and no pager (use_pager auto-resolves to false without
+                // start/limit). Sorting stays disabled: the datatable sort
+                // headers call reloadTab(), which only exists on item tabs,
+                // not on a standalone plugin page.
                 'nofilter'            => true,
-                'nopager'             => true,
-                'nosort'              => false,
+                'nosort'              => true,
                 'columns'             => $columns,
                 'entries'             => $entries,
                 'total_number'        => count($entries),

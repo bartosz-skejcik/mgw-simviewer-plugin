@@ -36,7 +36,7 @@ use GlpiPlugin\Simviewer\Config;
 use GlpiPlugin\Simviewer\Profile;
 use GlpiPlugin\Simviewer\Simcard;
 
-define('PLUGIN_SIMVIEWER_VERSION', '1.0.0');
+define('PLUGIN_SIMVIEWER_VERSION', '1.0.1');
 
 // Minimal GLPI version, inclusive
 define('PLUGIN_SIMVIEWER_MIN_GLPI_VERSION', '11.0.0');
@@ -59,8 +59,8 @@ function plugin_init_simviewer(): void
     /** @var array $PLUGIN_HOOKS */
     global $PLUGIN_HOOKS;
 
-    // GET-only, read-only page, but keep the plugin CSRF compliant.
-    $PLUGIN_HOOKS['csrf_compliant']['simviewer'] = true;
+    // Note: the `csrf_compliant` hook is deprecated in GLPI 11 (plugins are
+    // CSRF-compliant by default), so it is intentionally not registered.
 
     // Expose the read right on the Profile form (admins grant it per profile).
     Plugin::registerClass(Profile::class, ['addtabon' => ['Profile']]);
@@ -92,6 +92,30 @@ function plugin_init_simviewer(): void
         // rendered one elsewhere, or creates the link if native positioning did
         // nothing. Loaded only for entitled helpdesk users.
         $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['simviewer'] = ['js/nav-inject.js'];
+
+        // Hand the configured anchor selector and translated label to the JS
+        // asset. Static plugin files cannot receive PHP config, so they are
+        // published as <meta> tags (values are Twig-escaped by the core head
+        // template) that nav-inject.js reads back.
+        $cfg = Config::getConfig();
+        $PLUGIN_HOOKS[Hooks::ADD_HEADER_TAG]['simviewer'] = [
+            [
+                'tag'        => 'meta',
+                'properties' => [
+                    'name'    => 'simviewer:nav-selector',
+                    'content' => ($cfg['nav_selector'] ?? '') !== ''
+                        ? $cfg['nav_selector']
+                        : PLUGIN_SIMVIEWER_DEFAULT_NAV_SELECTOR,
+                ],
+            ],
+            [
+                'tag'        => 'meta',
+                'properties' => [
+                    'name'    => 'simviewer:label',
+                    'content' => Simcard::getMenuName(),
+                ],
+            ],
+        ];
     }
 }
 

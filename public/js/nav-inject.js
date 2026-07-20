@@ -17,8 +17,16 @@
 (function () {
     'use strict';
 
-    // Configurable per deployment; defaults to the PRD-specified anchor.
-    var NAV_SELECTOR = (window.SIMVIEWER && window.SIMVIEWER.nav_selector) || '#menu_1595890973';
+    // Configurable per deployment: setup.php publishes the configured anchor
+    // selector and translated label as <meta> tags (add_header_tag hook).
+    function meta(name) {
+        var el = document.querySelector('meta[name="' + name + '"]');
+        return el ? el.getAttribute('content') : null;
+    }
+
+    var NAV_SELECTOR = (window.SIMVIEWER && window.SIMVIEWER.nav_selector)
+        || meta('simviewer:nav-selector')
+        || '#menu_1595890973';
     var LINK_ID = 'simviewer-nav-link';
     var PATH = '/plugins/simviewer/front/simcard.php';
 
@@ -32,6 +40,10 @@
     function label() {
         if (window.SIMVIEWER && window.SIMVIEWER.label) {
             return window.SIMVIEWER.label;
+        }
+        var translated = meta('simviewer:label');
+        if (translated) {
+            return translated;
         }
         var lang = (document.documentElement.getAttribute('lang') || 'en').toLowerCase();
         return lang.indexOf('pl') === 0 ? 'Podgląd SIM' : 'SIM Viewer';

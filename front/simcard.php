@@ -45,15 +45,14 @@ include(__DIR__ . '/../../../inc/includes.php');
 Session::checkRight(Simcard::$rightname, READ);
 
 // Render with the correct header for the active interface (helpdesk vs central).
+// GLPI 11 signatures: header($title, $url /* unused */, $sector, $item, ...)
+// and helpHeader($title, $sector, $item, ...). Sector 'plugins' / item
+// 'simviewer' match the menu key generateHelpMenu() registers for the
+// helpdesk_menu_entry hook, so the entry is highlighted as active.
 if (($_SESSION['glpiactiveprofile']['interface'] ?? '') === 'central') {
-    Html::header(
-        Simcard::getMenuName(),
-        $_SERVER['PHP_SELF'],
-        'plugins',
-        Simcard::class,
-    );
+    Html::header(Simcard::getMenuName(), '', 'plugins', 'simviewer');
 } else {
-    Html::helpHeader(Simcard::getMenuName(), $_SERVER['PHP_SELF']);
+    Html::helpHeader(Simcard::getMenuName(), 'plugins', 'simviewer');
 }
 
 Simcard::show();
