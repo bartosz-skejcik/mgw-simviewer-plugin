@@ -39,7 +39,7 @@ The native self-service (simplified) interface in GLPI 11 exposes only tickets, 
 | Self-service user (not granted) | Sees nothing; menu entry absent; direct URL blocked |
 | Admin / Super-Admin | Toggles the plugin right per profile; configures options |
 
-Access is controlled by a **dedicated plugin right** (`plugin_simviewer`, value READ) registered in `glpi_profilerights`. The right is exposed on the profile form so an admin decides which profiles (self-service or otherwise) see the viewer. Do not assume every self-service user should have it: granting is an explicit admin action.
+Access is controlled by a **dedicated plugin right** (`plugin_simviewer`, value READ) registered in `glpi_profilerights`. The right is exposed on the profile form so an admin can adjust which profiles see the viewer. **Default on install (decision 2026-07-20):** profiles on the simplified (helpdesk) interface receive READ out of the box — the directory is built for self-service users, so a clean install works without manual right grants. Central-interface profiles get the right at 0 (except config managers, who get READ); admins can revoke or extend per profile at any time.
 
 ## 6. Functional requirements
 

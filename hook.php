@@ -43,15 +43,29 @@ use GlpiPlugin\Simviewer\Simcard;
  */
 function plugin_simviewer_install(): bool
 {
+    /** @var \Psr\SimpleCache\CacheInterface $GLPI_CACHE */
+    global $GLPI_CACHE;
+
     $migration = new Migration(PLUGIN_SIMVIEWER_VERSION);
 
     // Migration::addRight() covers every profile missing the right in one pass:
     // profiles holding config UPDATE (super-admins) get READ, all others get a
-    // row at 0 (no access — granting to self-service profiles is an explicit
-    // admin action, PRD §5). It skips profiles that already have the row, so
-    // install stays idempotent. Do NOT add ProfileRight::addProfileRights()
-    // here: it INSERTs blindly for every profile and collides with these rows.
+    // row at 0. It skips profiles that already have the row, so install stays
+    // idempotent. Do NOT add ProfileRight::addProfileRights() here: it INSERTs
+    // blindly for every profile and collides with these rows.
     $migration->addRight(Simcard::$rightname, READ, ['config' => UPDATE]);
+
+    // By design the SIM directory is for self-service users, so profiles on
+    // the simplified (helpdesk) interface get READ out of the box. OR-merge,
+    // idempotent, and bumps profiles' last_rights_update.
+    $migration->addRightByInterface(Simcard::$rightname, READ, 'helpdesk');
+
+    // GLPI caches the list of known right names ('all_possible_rights');
+    // session right-loading filters against it, so without a reset freshly
+    // logged-in users would not receive the new right until a manual
+    // cache:clear. (ProfileRight::addProfileRights() used to reset it as a
+    // side effect; Migration::addRight() does not.)
+    $GLPI_CACHE->set('all_possible_rights', []);
 
     // Seed default configuration (privacy-first defaults, see PRD §9).
     Config::install();
