@@ -36,7 +36,7 @@ use GlpiPlugin\Simviewer\Config;
 use GlpiPlugin\Simviewer\Profile;
 use GlpiPlugin\Simviewer\Simcard;
 
-define('PLUGIN_SIMVIEWER_VERSION', '1.0.3');
+define('PLUGIN_SIMVIEWER_VERSION', '1.0.4');
 
 // Minimal GLPI version, inclusive
 define('PLUGIN_SIMVIEWER_MIN_GLPI_VERSION', '11.0.0');
@@ -61,6 +61,14 @@ function plugin_init_simviewer(): void
 
     // Note: the `csrf_compliant` hook is deprecated in GLPI 11 (plugins are
     // CSRF-compliant by default), so it is intentionally not registered.
+
+    // Whitelist the plugin right for the simplified interface. At login,
+    // Profile::cleanProfile() strips every right not present in
+    // \Profile::$helpdesk_rights from helpdesk sessions — without this line
+    // self-service users never receive the right (403 despite the DB grant).
+    if (!in_array(Simcard::$rightname, \Profile::$helpdesk_rights, true)) {
+        \Profile::$helpdesk_rights[] = Simcard::$rightname;
+    }
 
     // Expose the read right on the Profile form (admins grant it per profile).
     Plugin::registerClass(Profile::class, ['addtabon' => ['Profile']]);
