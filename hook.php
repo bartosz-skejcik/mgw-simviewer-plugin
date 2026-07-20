@@ -45,15 +45,13 @@ function plugin_simviewer_install(): bool
 {
     $migration = new Migration(PLUGIN_SIMVIEWER_VERSION);
 
-    // Order matters: addRight() only creates the right for profiles that do NOT
-    // already have it. So grant READ to config managers (super-admins) FIRST,
-    // then backfill every remaining profile at 0. (Doing addProfileRights first
-    // pre-creates all rows at 0 and makes addRight a no-op.)
+    // Migration::addRight() covers every profile missing the right in one pass:
+    // profiles holding config UPDATE (super-admins) get READ, all others get a
+    // row at 0 (no access — granting to self-service profiles is an explicit
+    // admin action, PRD §5). It skips profiles that already have the row, so
+    // install stays idempotent. Do NOT add ProfileRight::addProfileRights()
+    // here: it INSERTs blindly for every profile and collides with these rows.
     $migration->addRight(Simcard::$rightname, READ, ['config' => UPDATE]);
-
-    // Register the right (at 0 — no access) on every other existing profile.
-    // Granting it to self-service profiles is an explicit admin action (PRD §5).
-    ProfileRight::addProfileRights([Simcard::$rightname]);
 
     // Seed default configuration (privacy-first defaults, see PRD §9).
     Config::install();

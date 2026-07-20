@@ -36,7 +36,7 @@ use GlpiPlugin\Simviewer\Config;
 use GlpiPlugin\Simviewer\Profile;
 use GlpiPlugin\Simviewer\Simcard;
 
-define('PLUGIN_SIMVIEWER_VERSION', '1.0.1');
+define('PLUGIN_SIMVIEWER_VERSION', '1.0.2');
 
 // Minimal GLPI version, inclusive
 define('PLUGIN_SIMVIEWER_MIN_GLPI_VERSION', '11.0.0');
