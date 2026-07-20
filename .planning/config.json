@@ -1,0 +1,10 @@
+{
+  "workflow": {
+    "research": false,
+    "text_mode": false
+  },
+  "project": {
+    "name": "SIM Viewer",
+    "type": "brownfield"
+  }
+}
