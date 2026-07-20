@@ -247,7 +247,9 @@ class Config extends CommonDBTM
 
         if ($can_edit) {
             echo "<div class='text-center mt-3'>";
-            echo "<button type='submit' name='update' class='btn btn-primary'>" . _sx('button', 'Save') . "</button>";
+            // value='1' is required: a value-less button posts an empty string
+            // and core config.form.php gates the save on !empty($_POST['update']).
+            echo "<button type='submit' name='update' value='1' class='btn btn-primary'>" . _sx('button', 'Save') . "</button>";
             echo "</div>";
         }
 
