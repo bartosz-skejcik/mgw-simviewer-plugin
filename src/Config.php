@@ -54,9 +54,12 @@ class Config extends CommonDBTM
     public const CONTEXT = 'plugin:simviewer';
 
     /**
-     * Default configuration. Privacy-first (PRD §9): serial, status and CSV
-     * export are all off by default. Phone number is read from the Fields
-     * plugin custom field `nr_telefonu` (auto-detected when the table is blank).
+     * Default configuration. Serial and status columns stay off by default
+     * (PRD §9). CSV export defaults ON (2026-07-20 decision, relaxes the
+     * original privacy-first RODO recommendation); SIMs without an assigned
+     * user are hidden by default (`show_unassigned`). Phone number is read
+     * from the Fields plugin custom field `nr_telefonu` (auto-detected when
+     * the table is blank).
      *
      * @return array<string, string>
      */
@@ -65,7 +68,14 @@ class Config extends CommonDBTM
         return [
             'show_serial'   => '0',
             'show_status'   => '0',
-            'enable_export' => '0',
+            // Default flipped to '1' per the 2026-07-20 user decision, which
+            // consciously relaxes the PRD's original privacy-first (RODO)
+            // recommendation of exporting off by default.
+            'enable_export' => '1',
+            // Hide SIMs without an assigned user by default (94/136 rows on
+            // production are unassigned and clutter the catalog); admins can
+            // restore the full list via this Yes/No config option.
+            'show_unassigned' => '0',
             // 'fields' (Fields plugin custom field) or 'line' (native Line object).
             'phone_source'  => 'fields',
             // Empty fields_table => auto-detect the Fields plugin container table
@@ -183,7 +193,7 @@ class Config extends CommonDBTM
     public static function configUpdate(array $input): array
     {
         // Normalise checkboxes to '0'/'1' strings.
-        foreach (['show_serial', 'show_status', 'enable_export'] as $bool) {
+        foreach (['show_serial', 'show_status', 'enable_export', 'show_unassigned'] as $bool) {
             $input[$bool] = !empty($input[$bool]) ? '1' : '0';
         }
 
@@ -218,6 +228,10 @@ class Config extends CommonDBTM
 
         echo "<tr class='tab_bg_1'><td>" . __s('Enable CSV export', 'simviewer') . "</td><td>";
         Dropdown::showYesNo('enable_export', $cfg['enable_export'], -1, ['readonly' => !$can_edit]);
+        echo "</td></tr>";
+
+        echo "<tr class='tab_bg_1'><td>" . __s('Show SIMs without assigned user', 'simviewer') . "</td><td>";
+        Dropdown::showYesNo('show_unassigned', $cfg['show_unassigned'], -1, ['readonly' => !$can_edit]);
         echo "</td></tr>";
 
         // Phone number source.

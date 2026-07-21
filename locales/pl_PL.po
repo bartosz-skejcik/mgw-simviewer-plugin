@@ -57,6 +57,9 @@ msgstr "Pokaż kolumnę statusu"
 msgid "Enable CSV export"
 msgstr "Włącz eksport CSV"
 
+msgid "Show SIMs without assigned user"
+msgstr "Pokaż SIM-y bez przypisanego użytkownika"
+
 msgid "Phone number source"
 msgstr "Źródło numeru telefonu"
 
