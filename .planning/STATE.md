@@ -85,6 +85,14 @@ None yet.
 - Weryfikować API Tiles (`src/Glpi/Helpdesk/Tile/`) i `csv_url` datatable względem gałęzi GLPI `11.0/bugfixes`, nie przykładów z GLPI 10
 - Każda wdrażana faza podbija `PLUGIN_SIMVIEWER_VERSION` (produkcja live na 1.0.5); deploy: git push → git pull na serwerze → `plugin:install` + `plugin:activate` w konsoli dockera
 
+## Deferred Verification
+
+| Phase | State | Resume |
+|-------|-------|--------|
+| 1 | verification_deferred_human | /gsd-verify-work 1 |
+
+Deferred item: uninstall behavior test (`plugin:uninstall` removes the „Podgląd SIM" tile from `/Helpdesk`; reinstall restores exactly one tile) — see `.planning/phases/01-natywna-nawigacja/01-UAT.md`. All other SC1–SC4 items human-verified on production 2026-07-21.
+
 ## Deferred Items
 
 Items acknowledged and carried forward from previous milestone close:
