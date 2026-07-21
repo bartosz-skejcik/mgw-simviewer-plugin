@@ -124,33 +124,50 @@ function plugin_simviewer_install(): bool
     }
 
     // Register the native "Podgląd SIM" home-page tile (system Tiles,
-    // ExternalPageTile) for every helpdesk-interface profile. Runs on both
-    // fresh install and update (GLPI calls install() again after a version
-    // bump), so it must stay idempotent: skip profiles that already carry a
-    // tile pointing at the SIM catalog before adding a new one.
+    // ExternalPageTile) on the ROOT ENTITY, not on helpdesk profiles. GLPI's
+    // TilesManager::getVisibleTilesForSession() loads PROFILE tiles first and
+    // falls back to entity tiles ONLY when the profile has none — so linking
+    // the tile to a profile REPLACES the entity's whole default tile set
+    // (Service Catalog forms/pages vanish from /Helpdesk). Linking to the
+    // root entity appends the tile after the existing defaults (rank is
+    // getMaxUsedRankForItem()+1) and every helpdesk-interface profile keeps
+    // its Service Catalog tiles. Runs on both fresh install and update, so it
+    // must stay idempotent: skip when the entity already carries a tile
+    // pointing at the SIM catalog.
     //
-    // KNOWN LIMITATION: this is a point-in-time snapshot, not a live
-    // reflection of Simcard::$rightname on each profile — unlike the
-    // HELPDESK_MENU_ENTRY hook in setup.php, which re-evaluates
-    // Simcard::canView() on every request. GLPI's Tiles system has no
-    // per-request "should this tile render" callback for admins to hook into
-    // from a plugin; tiles are profile-scoped rows added/removed explicitly,
-    // not computed live. Consequences: (1) revoking the right from a profile
-    // via the Profile admin tab afterwards leaves that profile's tile in
-    // place — clicking it still 403s via Session::checkRight() in
-    // front/simcard.php (no authorization bypass), but the tile itself
-    // becomes a dead link until an admin re-runs this install() (e.g. via
-    // Setup > Plugins > "reinstall/repair", or the next version bump); (2) a
-    // helpdesk profile created after the plugin was installed will not have
-    // the tile (nor the right, for the same install-time-only reason) until
-    // install() runs again. See README.md "Known limitations" for the
-    // admin-facing note.
+    // KNOWN LIMITATION: an entity tile renders for every helpdesk-interface
+    // user of that entity regardless of the plugin right — GLPI's Tiles
+    // system has no per-request "should this tile render" callback for
+    // plugins (ExternalPageTile::isAvailable() is unconditional). A user
+    // whose profile lacks Simcard::$rightname still sees the tile; clicking
+    // it hits Session::checkRight() in front/simcard.php and gets a rights
+    // error (no authorization bypass). In practice all helpdesk profiles are
+    // granted READ at install (addRightByInterface above). See README.md
+    // "Known limitations" for the admin-facing note.
     $tiles_manager = TilesManager::getInstance();
     $tile_url      = Simcard::getListUrl();
+    $tile_title    = Simcard::getMenuName();
 
+    // Migration from the profile-linked variant (first 1.2.0 install):
+    // remove any simviewer tile still attached to a helpdesk profile, so the
+    // profile tile set becomes empty again and GLPI falls back to entity
+    // tiles. Matching on URL + title, same ownership heuristic as uninstall.
     foreach (plugin_simviewer_get_helpdesk_profiles() as $profile) {
-        $has_tile = false;
         foreach ($tiles_manager->getTilesForItem($profile) as $tile) {
+            if (
+                $tile instanceof ExternalPageTile
+                && $tile->getTileUrl() === $tile_url
+                && (!method_exists($tile, 'getTitle') || $tile->getTitle() === $tile_title)
+            ) {
+                $tiles_manager->deleteTile($tile);
+            }
+        }
+    }
+
+    $root_entity = new \Entity();
+    if ($root_entity->getFromDB(0)) {
+        $has_tile = false;
+        foreach ($tiles_manager->getTilesForItem($root_entity) as $tile) {
             if ($tile instanceof ExternalPageTile && $tile->getTileUrl() === $tile_url) {
                 $has_tile = true;
                 break;
@@ -158,8 +175,8 @@ function plugin_simviewer_install(): bool
         }
 
         if (!$has_tile) {
-            $tiles_manager->addTile($profile, ExternalPageTile::class, [
-                'title'       => Simcard::getMenuName(),
+            $tiles_manager->addTile($root_entity, ExternalPageTile::class, [
+                'title'       => $tile_title,
                 'description' => __('Coworkers\' business phone numbers', 'simviewer'),
                 'url'         => $tile_url,
             ]);
@@ -200,6 +217,21 @@ function plugin_simviewer_uninstall(): bool
     $tile_url      = Simcard::getListUrl();
     $tile_title    = Simcard::getMenuName();
 
+    // Current variant: tile linked to the root entity.
+    $root_entity = new \Entity();
+    if ($root_entity->getFromDB(0)) {
+        foreach ($tiles_manager->getTilesForItem($root_entity) as $tile) {
+            if (
+                $tile instanceof ExternalPageTile
+                && $tile->getTileUrl() === $tile_url
+                && (!method_exists($tile, 'getTitle') || $tile->getTitle() === $tile_title)
+            ) {
+                $tiles_manager->deleteTile($tile);
+            }
+        }
+    }
+
+    // Legacy variant (first 1.2.0 install linked tiles to helpdesk profiles).
     foreach (plugin_simviewer_get_helpdesk_profiles() as $profile) {
         foreach ($tiles_manager->getTilesForItem($profile) as $tile) {
             if (

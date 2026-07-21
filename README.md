@@ -4,17 +4,16 @@ Add your plugin description here.
 
 ## Known limitations
 
-* **Home-page tile does not track later right changes.** The self-service
-  home-page tile ("Podgląd SIM") is added to a profile's home page once, when
-  the plugin is installed or updated, for every profile on the simplified
-  (helpdesk) interface at that moment. If you later grant or revoke the
-  `plugin_simviewer` READ right on a specific profile from that profile's
-  admin tab, the tile is **not** added or removed automatically — the
-  underlying page access is still correctly enforced (a revoked user gets a
-  403 if they click a stale tile), but the tile itself can go stale or be
-  missing. To resync tiles with the current per-profile rights, trigger a
-  plugin repair/reinstall (Setup > Plugins) after changing rights on a
-  profile.
+* **Home-page tile is entity-wide, not right-scoped.** The self-service
+  home-page tile ("Podgląd SIM") is linked to the root entity (so it appears
+  *alongside* the entity's default Service Catalog tiles — GLPI replaces the
+  whole default tile set when a profile carries its own tiles, which is why
+  the tile is not profile-linked). Every helpdesk-interface user of the
+  entity sees the tile regardless of the `plugin_simviewer` READ right; page
+  access is still enforced server-side (a user without the right gets a
+  rights error when clicking). All helpdesk profiles are granted READ at
+  install, so in practice this only matters if an admin later revokes the
+  right on a profile.
 
 ## Contributing
 
