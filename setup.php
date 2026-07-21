@@ -36,19 +36,13 @@ use GlpiPlugin\Simviewer\Config;
 use GlpiPlugin\Simviewer\Profile;
 use GlpiPlugin\Simviewer\Simcard;
 
-define('PLUGIN_SIMVIEWER_VERSION', '1.0.5');
+define('PLUGIN_SIMVIEWER_VERSION', '1.1.0');
 
 // Minimal GLPI version, inclusive
 define('PLUGIN_SIMVIEWER_MIN_GLPI_VERSION', '11.0.0');
 
 // Maximum GLPI version, exclusive
 define('PLUGIN_SIMVIEWER_MAX_GLPI_VERSION', '11.0.99');
-
-/**
- * Default top-nav-bar anchor for the SIM Viewer link (see PRD FR-1a).
- * Auto-generated GLPI menu id; configurable per deployment via the plugin config.
- */
-define('PLUGIN_SIMVIEWER_DEFAULT_NAV_SELECTOR', '#menu_1595890973');
 
 /**
  * Init hooks of the plugin.
@@ -93,37 +87,6 @@ function plugin_init_simviewer(): void
         // Primary, native mechanism: add a link to the simplified-interface menu.
         $PLUGIN_HOOKS[Hooks::HELPDESK_MENU_ENTRY]['simviewer']      = '/front/simcard.php';
         $PLUGIN_HOOKS[Hooks::HELPDESK_MENU_ENTRY_ICON]['simviewer'] = 'ti ti-device-sim';
-
-        // Fallback / exact-placement mechanism (FR-1a): a small JS asset that
-        // guarantees the link lands in the top nav bar at the configured anchor
-        // (#menu_1595890973 by default). It relocates the native entry if GLPI
-        // rendered one elsewhere, or creates the link if native positioning did
-        // nothing. Loaded only for entitled helpdesk users.
-        $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['simviewer'] = ['js/nav-inject.js'];
-
-        // Hand the configured anchor selector and translated label to the JS
-        // asset. Static plugin files cannot receive PHP config, so they are
-        // published as <meta> tags (values are Twig-escaped by the core head
-        // template) that nav-inject.js reads back.
-        $cfg = Config::getConfig();
-        $PLUGIN_HOOKS[Hooks::ADD_HEADER_TAG]['simviewer'] = [
-            [
-                'tag'        => 'meta',
-                'properties' => [
-                    'name'    => 'simviewer:nav-selector',
-                    'content' => ($cfg['nav_selector'] ?? '') !== ''
-                        ? $cfg['nav_selector']
-                        : PLUGIN_SIMVIEWER_DEFAULT_NAV_SELECTOR,
-                ],
-            ],
-            [
-                'tag'        => 'meta',
-                'properties' => [
-                    'name'    => 'simviewer:label',
-                    'content' => Simcard::getMenuName(),
-                ],
-            ],
-        ];
     }
 }
 

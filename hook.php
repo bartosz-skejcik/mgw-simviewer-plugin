@@ -93,6 +93,14 @@ function plugin_simviewer_install(): bool
     // Seed default configuration (privacy-first defaults, see PRD §9).
     Config::install();
 
+    // Migrate away the retired top-nav-anchor option: delete the stale
+    // 'nav_selector' key from stored config (idempotent no-op once removed,
+    // and a no-op on a fresh install where it was never seeded).
+    $stored_config = \Config::getConfigurationValues(Config::CONTEXT);
+    if (isset($stored_config['nav_selector'])) {
+        (new \Config())->deleteConfigurationValues(Config::CONTEXT, ['nav_selector']);
+    }
+
     // Register the native "Podgląd SIM" home-page tile (system Tiles,
     // ExternalPageTile) for every helpdesk-interface profile. Runs on both
     // fresh install and update (GLPI calls install() again after a version

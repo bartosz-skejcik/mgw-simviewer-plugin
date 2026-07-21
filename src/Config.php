@@ -76,8 +76,6 @@ class Config extends CommonDBTM
             'fields_column' => 'nrtelefonufield',
             // Native Line fallback column (the "Caller number").
             'line_column'   => 'caller_num',
-            // Top nav-bar anchor for the self-service link (PRD FR-1a).
-            'nav_selector'  => PLUGIN_SIMVIEWER_DEFAULT_NAV_SELECTOR,
         ];
     }
 
@@ -238,10 +236,6 @@ class Config extends CommonDBTM
 
         echo "<tr class='tab_bg_1'><td>" . __s('Line phone column name', 'simviewer') . "</td>";
         echo "<td><input type='text' class='form-control' name='line_column' value='" . htmlspecialchars($cfg['line_column']) . "'" . ($can_edit ? '' : ' readonly') . "></td></tr>";
-
-        // Top nav-bar anchor (PRD FR-1a).
-        echo "<tr class='tab_bg_1'><td>" . __s('Top nav-bar anchor (CSS selector)', 'simviewer') . "</td>";
-        echo "<td><input type='text' class='form-control' name='nav_selector' value='" . htmlspecialchars($cfg['nav_selector']) . "'" . ($can_edit ? '' : ' readonly') . "></td></tr>";
 
         echo "</table>";
 
