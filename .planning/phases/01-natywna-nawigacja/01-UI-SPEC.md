@@ -61,6 +61,8 @@ Not applicable — GLPI-native. Tile background, border, hover, and icon colors 
 
 Accent reserved for: nothing plugin-controlled — the icon glyph color is inherited from the GLPI Tiles component's default icon treatment, not set by this plugin.
 
+**Visual hierarchy:** no plugin-controlled focal point is introduced — the tile is one equal-weight card among the profile's existing tiles, appended at the end of the list; hierarchy is GLPI's tile-grid default.
+
 ---
 
 ## Copywriting Contract
@@ -70,7 +72,7 @@ The tile has exactly one interactive affordance (the tile itself, click-through 
 | Element | Copy |
 |---------|------|
 | Primary CTA | The tile itself is the CTA — no separate button. Title (en_GB, source string): **"SIM Viewer"** → existing translation (pl_PL, `locales/pl_PL.po:12-13`): **"Podgląd SIM"**. Reuse `Simcard::getMenuName()` verbatim — do not introduce a second translatable string for the tile title. |
-| Tile description (en_GB) | **"Coworkers' business phone numbers"** — new translatable string, source string TBD exact wording at implementation; must be short (single line, fits GLPI tile card without wrapping to more than ~2 lines at default width) |
+| Tile description (en_GB) | **"Coworkers' business phone numbers"** — new translatable string, LOCKED as written (source string used verbatim in code and `locales/en_GB.po`); short single line, fits GLPI tile card without wrapping to more than ~2 lines at default width |
 | Tile description (pl_PL) | **"Służbowe numery telefonów współpracowników"** — locked by CONTEXT.md (2026-07-21 discussion) |
 | Empty state heading | Not applicable to this phase — the tile has no empty state (it is a static navigational link, not a data list). The destination page's empty state ("No SIM cards are visible to you." / "Brak kart SIM widocznych dla Ciebie.") already exists from v1.0 and is out of scope for Phase 1 |
 | Empty state body | Not applicable — see above |
@@ -110,11 +112,11 @@ Not applicable — no shadcn or component registry is in use in this project. GL
 
 ## Checker Sign-Off
 
-- [ ] Dimension 1 Copywriting: PASS
-- [ ] Dimension 2 Visuals: PASS
-- [ ] Dimension 3 Color: PASS
-- [ ] Dimension 4 Typography: PASS
-- [ ] Dimension 5 Spacing: PASS
-- [ ] Dimension 6 Registry Safety: PASS
+- [x] Dimension 1 Copywriting: PASS (FLAG resolved — en_GB string locked)
+- [x] Dimension 2 Visuals: PASS (FLAG resolved — no-focal-point statement added)
+- [x] Dimension 3 Color: PASS
+- [x] Dimension 4 Typography: PASS
+- [x] Dimension 5 Spacing: PASS
+- [x] Dimension 6 Registry Safety: PASS
 
-**Approval:** pending
+**Approval:** APPROVED (gsd-ui-checker, 2026-07-21)
