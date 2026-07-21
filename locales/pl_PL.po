@@ -77,3 +77,6 @@ msgstr "Nazwa kolumny telefonu w obiekcie Linia"
 
 msgid "Top nav-bar anchor (CSS selector)"
 msgstr "Kotwica górnego paska nawigacji (selektor CSS)"
+
+msgid "Coworkers' business phone numbers"
+msgstr "Służbowe numery telefonów współpracowników"
