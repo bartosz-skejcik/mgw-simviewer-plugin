@@ -9,8 +9,8 @@ Requirements for milestone v1.1 „Natywna nawigacja i eksport". Each maps to ro
 
 ### Nawigacja (NAV)
 
-- [ ] **NAV-01**: Użytkownik self-service widzi na stronie głównej `/Helpdesk` natywny kafelek „Podgląd SIM" (system Tiles GLPI 11, `ExternalPageTile`/`TilesManager`) otwierający katalog SIM; kafelek jest rejestrowany automatycznie przy instalacji/aktualizacji wtyczki
-- [ ] **NAV-02**: Wtyczka nie zawiera customowego wstrzykiwania nawigacji — `public/js/nav-inject.js`, opcja `nav_selector` i meta tagi `simviewer:*` są usunięte; nawigacja opiera się wyłącznie na natywnych mechanizmach GLPI (`helpdesk_menu_entry` + kafelek); deinstalacja sprząta kafelek
+- [x] **NAV-01**: Użytkownik self-service widzi na stronie głównej `/Helpdesk` natywny kafelek „Podgląd SIM" (system Tiles GLPI 11, `ExternalPageTile`/`TilesManager`) otwierający katalog SIM; kafelek jest rejestrowany automatycznie przy instalacji/aktualizacji wtyczki
+- [x] **NAV-02**: Wtyczka nie zawiera customowego wstrzykiwania nawigacji — `public/js/nav-inject.js`, opcja `nav_selector` i meta tagi `simviewer:*` są usunięte; nawigacja opiera się wyłącznie na natywnych mechanizmach GLPI (`helpdesk_menu_entry` + kafelek); deinstalacja sprząta kafelek
 
 ### Eksport (EXP)
 
@@ -44,13 +44,14 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| NAV-01 | Phase 1 | Pending |
-| NAV-02 | Phase 1 | Pending |
+| NAV-01 | Phase 1 | Complete |
+| NAV-02 | Phase 1 | Complete |
 | EXP-01 | Phase 2 | Pending |
 | EXP-02 | Phase 2 | Pending |
 | TBL-01 | Phase 2 | Pending |
 
 **Coverage:**
+
 - v1.1 requirements: 5 total
 - Mapped to phases: 5
 - Unmapped: 0 ✓
