@@ -31,8 +31,31 @@
  * -------------------------------------------------------------------------
  */
 
+use Glpi\Helpdesk\Tile\ExternalPageTile;
+use Glpi\Helpdesk\Tile\TilesManager;
 use GlpiPlugin\Simviewer\Config;
 use GlpiPlugin\Simviewer\Simcard;
+
+/**
+ * Core \Profile objects for every profile on the simplified (helpdesk)
+ * interface — the population the native tile is registered for/removed
+ * from, mirroring the addRightByInterface(..., 'helpdesk') grant above.
+ *
+ * @return list<\Profile>
+ */
+function plugin_simviewer_get_helpdesk_profiles(): array
+{
+    $profiles = [];
+
+    foreach ((new \Profile())->find(['interface' => 'helpdesk']) as $row) {
+        $profile = new \Profile();
+        if ($profile->getFromDB($row['id'])) {
+            $profiles[] = $profile;
+        }
+    }
+
+    return $profiles;
+}
 
 /**
  * Plugin install process.
@@ -70,6 +93,32 @@ function plugin_simviewer_install(): bool
     // Seed default configuration (privacy-first defaults, see PRD §9).
     Config::install();
 
+    // Register the native "Podgląd SIM" home-page tile (system Tiles,
+    // ExternalPageTile) for every helpdesk-interface profile. Runs on both
+    // fresh install and update (GLPI calls install() again after a version
+    // bump), so it must stay idempotent: skip profiles that already carry a
+    // tile pointing at the SIM catalog before adding a new one.
+    $tiles_manager = TilesManager::getInstance();
+    $tile_url      = Simcard::getListUrl();
+
+    foreach (plugin_simviewer_get_helpdesk_profiles() as $profile) {
+        $has_tile = false;
+        foreach ($tiles_manager->getTilesForItem($profile) as $tile) {
+            if ($tile instanceof ExternalPageTile && $tile->getTileUrl() === $tile_url) {
+                $has_tile = true;
+                break;
+            }
+        }
+
+        if (!$has_tile) {
+            $tiles_manager->addTile($profile, ExternalPageTile::class, [
+                'title'       => Simcard::getMenuName(),
+                'description' => __('Coworkers\' business phone numbers', 'simviewer'),
+                'url'         => $tile_url,
+            ]);
+        }
+    }
+
     $migration->executeMigration();
 
     return true;
@@ -86,6 +135,19 @@ function plugin_simviewer_uninstall(): bool
     Config::uninstall();
 
     ProfileRight::deleteProfileRights([Simcard::$rightname]);
+
+    // Remove every "Podgląd SIM" ExternalPageTile registered by install()
+    // (deleteTile() also removes the Item_Tile profile association).
+    $tiles_manager = TilesManager::getInstance();
+    $tile_url      = Simcard::getListUrl();
+
+    foreach (plugin_simviewer_get_helpdesk_profiles() as $profile) {
+        foreach ($tiles_manager->getTilesForItem($profile) as $tile) {
+            if ($tile instanceof ExternalPageTile && $tile->getTileUrl() === $tile_url) {
+                $tiles_manager->deleteTile($tile);
+            }
+        }
+    }
 
     return true;
 }
