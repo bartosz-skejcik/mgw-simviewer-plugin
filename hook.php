@@ -90,6 +90,13 @@ function plugin_simviewer_install(): bool
     // side effect; Migration::addRight() does not.)
     $GLPI_CACHE->set('all_possible_rights', []);
 
+    // Capture the pre-install stored config BEFORE Config::install() seeds
+    // defaults, so the one-time enable_export migration below can tell a
+    // fresh install (empty) apart from an upgrade (populated) — see EXP-02
+    // migration block after Config::install().
+    $pre_existing = \Config::getConfigurationValues(Config::CONTEXT);
+    $is_upgrade   = !empty($pre_existing);
+
     // Seed default configuration (privacy-first defaults, see PRD §9).
     Config::install();
 
@@ -99,6 +106,21 @@ function plugin_simviewer_install(): bool
     $stored_config = \Config::getConfigurationValues(Config::CONTEXT);
     if (isset($stored_config['nav_selector'])) {
         (new \Config())->deleteConfigurationValues(Config::CONTEXT, ['nav_selector']);
+    }
+
+    // One-time enable_export default flip (D: EXP-02, satisfies SC2 without
+    // clobbering a later admin decision — the prohibition). The stored marker
+    // 'export_default_migrated' is the source of truth for "already migrated"
+    // (not a PLUGIN_SIMVIEWER_VERSION string comparison), and is race-free
+    // within the single-threaded console install process. Fresh installs
+    // seed enable_export='1' via getDefaults() and set the marker WITHOUT a
+    // flip, so a later admin disable survives future reinstalls. An upgrade
+    // from 1.1.0 with stored '0' (production) flips to '1' exactly once.
+    if (!isset($pre_existing['export_default_migrated'])) {
+        if ($is_upgrade && ($pre_existing['enable_export'] ?? null) === '0') {
+            (new \Config())->setConfigurationValues(Config::CONTEXT, ['enable_export' => '1']);
+        }
+        (new \Config())->setConfigurationValues(Config::CONTEXT, ['export_default_migrated' => '1']);
     }
 
     // Register the native "Podgląd SIM" home-page tile (system Tiles,
