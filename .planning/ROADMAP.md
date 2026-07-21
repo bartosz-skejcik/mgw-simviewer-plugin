@@ -52,10 +52,10 @@ Milestone v1.1 „Natywna nawigacja i eksport" domyka dwa znane braki v1.0 na pr
   3. Katalog domyślnie nie pokazuje SIM-ów bez przypisanego użytkownika (na produkcji: 42 wiersze zamiast 136), a eksport CSV respektuje ten sam filtr
   4. Włączenie nowej opcji `show_unassigned` w konfiguracji przywraca pełną listę (136 wierszy na produkcji)
 
-**Plans**: 1/3 plans executed
+**Plans**: 2/3 plans executed
 
 - [x] 02-01-PLAN.md — Config + domyślny filtr pustych SIM-ów: flip enable_export, opcja show_unassigned, migracja, bump 1.2.0 (wave 1)
-- [ ] 02-02-PLAN.md — Natywny eksport CSV: front/export.php (403 gate) + csv_url na datatable (wave 2)
+- [x] 02-02-PLAN.md — Natywny eksport CSV: front/export.php (403 gate) + csv_url na datatable (wave 2)
 - [ ] 02-03-PLAN.md — Checkpoint: deploy 1.2.0 i weryfikacja SC1-SC4 na glpi.mgw1943.local (wave 3)
 
 ## Progress
@@ -66,4 +66,4 @@ Phases execute in numeric order: 1 → 2
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Natywna nawigacja | 2/2 | In Progress|  |
-| 2. Eksport CSV i filtr pustych SIM-ów | 1/3 | In Progress|  |
+| 2. Eksport CSV i filtr pustych SIM-ów | 2/3 | In Progress|  |

@@ -5,15 +5,15 @@ milestone_name: Natywna nawigacja i eksport
 current_phase: 02
 current_phase_name: Eksport CSV i filtr pustych SIM-ów
 status: executing
-stopped_at: Completed 02-01-PLAN.md
-last_updated: "2026-07-21T13:22:30.801Z"
+stopped_at: Completed 02-02-PLAN.md
+last_updated: "2026-07-21T13:29:18.396Z"
 last_activity: 2026-07-21
 last_activity_desc: Phase 02 execution started
 progress:
   total_phases: 2
   completed_phases: 1
   total_plans: 5
-  completed_plans: 3
+  completed_plans: 4
 ---
 
 # Project State
@@ -28,11 +28,11 @@ See: .planning/PROJECT.md (updated 2026-07-20)
 ## Current Position
 
 Phase: 02 (Eksport CSV i filtr pustych SIM-ów) — EXECUTING
-Plan: 2 of 3
+Plan: 3 of 3
 Status: Ready to execute
 Last activity: 2026-07-21 — Phase 02 execution started
 
-Progress: [██████░░░░] 60%
+Progress: [████████░░] 80%
 
 ## Performance Metrics
 
@@ -61,6 +61,7 @@ Progress: [██████░░░░] 60%
 | Phase 01 P01 | 15min | 3 tasks | 6 files |
 | Phase 01 P02 | 5min | 1 tasks | 0 files |
 | Phase 02 P01 | 15min | 3 tasks | 8 files |
+| Phase 02 P02 | 4min | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -78,6 +79,8 @@ Recent decisions affecting current work:
 - [Phase ?]: Phase 1 (Natywna nawigacja) verified complete on production glpi.mgw1943.local (GLPI 11.0.4): SC1-SC4 confirmed by human browser UAT 2026-07-21 — native tile, JS-injection removal, no v1.0 menu regression, install idempotency, right-scoping all passed
 - [Phase ?]: enable_export default flip and show_unassigned default-narrowing both promoted per 2026-07-20 decisions (no re-escalation needed)
 - [Phase ?]: Migration marker export_default_migrated is the single source of truth for 'already migrated' (not a version-string comparison)
+- [Phase ?]: CSV formula-injection defense implemented as apostrophe-prefix escaping on cells starting with =,+,-,@ or tab/CR
+- [Phase ?]: front/export.php enable_export=0 gate reuses Html::displayRightError() for the 403 response, consistent with Session::checkRight()'s existing error idiom
 
 ### Pending Todos
 
@@ -106,6 +109,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-21T13:22:30.783Z
-Stopped at: Completed 02-01-PLAN.md
+Last session: 2026-07-21T13:29:18.378Z
+Stopped at: Completed 02-02-PLAN.md
 Resume file: None
