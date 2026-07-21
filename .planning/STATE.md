@@ -4,16 +4,16 @@ milestone: v1.1
 milestone_name: Natywna nawigacja i eksport
 current_phase: 01
 current_phase_name: Natywna nawigacja
-status: executing
-stopped_at: Completed 01-01-PLAN.md
-last_updated: "2026-07-21T10:34:58.092Z"
+status: verifying
+stopped_at: Completed 01-02-PLAN.md (checkpoint approved)
+last_updated: "2026-07-21T12:13:05.803Z"
 last_activity: 2026-07-21
 last_activity_desc: Phase 01 execution started
 progress:
   total_phases: 1
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 2
-  completed_plans: 1
+  completed_plans: 2
 ---
 
 # Project State
@@ -29,10 +29,10 @@ See: .planning/PROJECT.md (updated 2026-07-20)
 
 Phase: 01 (Natywna nawigacja) — EXECUTING
 Plan: 2 of 2
-Status: Ready to execute
+Status: Phase complete — ready for verification
 Last activity: 2026-07-21 — Phase 01 execution started
 
-Progress: [█████░░░░░] 50%
+Progress: [██████████] 100%
 
 ## Performance Metrics
 
@@ -59,6 +59,7 @@ Progress: [█████░░░░░] 50%
 | Plan | Duration | Tasks | Files |
 |------|----------|-------|-------|
 | Phase 01 P01 | 15min | 3 tasks | 6 files |
+| Phase 01 P02 | 5min | 1 tasks | 0 files |
 
 ## Accumulated Context
 
@@ -73,6 +74,7 @@ Recent decisions affecting current work:
 - [Phase ?]: Illustration field omitted from ExternalPageTile params — falls back to IllustrationManager::DEFAULT_ILLUSTRATION (deploy-verify item)
 - [Phase ?]: .mo files regenerated locally via tools/po2mo.py (Python 3.13 available on this machine)
 - [Phase ?]: Added plugin_simviewer_get_helpdesk_profiles() helper in hook.php shared by install/uninstall tile lifecycle
+- [Phase ?]: Phase 1 (Natywna nawigacja) verified complete on production glpi.mgw1943.local (GLPI 11.0.4): SC1-SC4 confirmed by human browser UAT 2026-07-21 — native tile, JS-injection removal, no v1.0 menu regression, install idempotency, right-scoping all passed
 
 ### Pending Todos
 
@@ -93,6 +95,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-21T10:34:58.066Z
-Stopped at: Completed 01-01-PLAN.md
+Last session: 2026-07-21T12:13:05.787Z
+Stopped at: Completed 01-02-PLAN.md (checkpoint approved)
 Resume file: None

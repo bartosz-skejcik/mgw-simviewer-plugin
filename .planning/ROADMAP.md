@@ -33,10 +33,10 @@ Milestone v1.1 „Natywna nawigacja i eksport" domyka dwa znane braki v1.0 na pr
   3. Strony self-service nie ładują `public/js/nav-inject.js` ani meta tagów `simviewer:*` (weryfikowalne w źródle strony / zakładce network), a opcja `nav_selector` znika z formularza konfiguracji i z zapisanej konfiguracji
   4. Wpis „Podgląd SIM" w menu interfejsu uproszczonego (`helpdesk_menu_entry`) nadal działa jak w v1.0 (brak regresji)
 
-**Plans**: 1/2 plans executed
+**Plans**: 2/2 plans executed
 
 - [x] 01-01-PLAN.md — Rejestracja natywnego kafelka Tiles + usunięcie JS injection, migracja configu, bump 1.1.0
-- [ ] 01-02-PLAN.md — Checkpoint: deploy na GLPI 11.0.4 i weryfikacja w przeglądarce (SC1–SC4)
+- [x] 01-02-PLAN.md — Checkpoint: deploy na GLPI 11.0.4 i weryfikacja w przeglądarce (SC1–SC4)
 
 **UI hint**: yes
 
@@ -61,5 +61,5 @@ Phases execute in numeric order: 1 → 2
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Natywna nawigacja | 1/2 | In Progress|  |
+| 1. Natywna nawigacja | 2/2 | In Progress|  |
 | 2. Eksport CSV i filtr pustych SIM-ów | 0/TBD | Not started | - |
