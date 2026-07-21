@@ -150,6 +150,14 @@ class Simcard extends CommonDBTM
             $where[] = $entity_restrict;
         }
 
+        // Unassigned-SIM filter is enforced in SQL, never in the view layer,
+        // same as the entity restriction above (TBL-01). Filter on the base
+        // table's users_id column (not the joined glpi_users fields) so both
+        // 0 and NULL-joined rows are excluded when show_unassigned is falsy.
+        if (empty($cfg['show_unassigned'])) {
+            $where[] = ["{$isc}.users_id" => ['>', 0]];
+        }
+
         $iterator = $DB->request([
             'SELECT'    => $select,
             'DISTINCT'  => true,
