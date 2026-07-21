@@ -106,6 +106,23 @@ function plugin_simviewer_install(): bool
     // fresh install and update (GLPI calls install() again after a version
     // bump), so it must stay idempotent: skip profiles that already carry a
     // tile pointing at the SIM catalog before adding a new one.
+    //
+    // KNOWN LIMITATION: this is a point-in-time snapshot, not a live
+    // reflection of Simcard::$rightname on each profile — unlike the
+    // HELPDESK_MENU_ENTRY hook in setup.php, which re-evaluates
+    // Simcard::canView() on every request. GLPI's Tiles system has no
+    // per-request "should this tile render" callback for admins to hook into
+    // from a plugin; tiles are profile-scoped rows added/removed explicitly,
+    // not computed live. Consequences: (1) revoking the right from a profile
+    // via the Profile admin tab afterwards leaves that profile's tile in
+    // place — clicking it still 403s via Session::checkRight() in
+    // front/simcard.php (no authorization bypass), but the tile itself
+    // becomes a dead link until an admin re-runs this install() (e.g. via
+    // Setup > Plugins > "reinstall/repair", or the next version bump); (2) a
+    // helpdesk profile created after the plugin was installed will not have
+    // the tile (nor the right, for the same install-time-only reason) until
+    // install() runs again. See README.md "Known limitations" for the
+    // admin-facing note.
     $tiles_manager = TilesManager::getInstance();
     $tile_url      = Simcard::getListUrl();
 
@@ -146,12 +163,28 @@ function plugin_simviewer_uninstall(): bool
 
     // Remove every "Podgląd SIM" ExternalPageTile registered by install()
     // (deleteTile() also removes the Item_Tile profile association).
+    //
+    // GLPI's Tiles schema carries no first-class "owner"/creator metadata, so
+    // there is no definitive way to tell a tile this plugin created apart
+    // from one an admin manually added via the core Tiles UI that happens to
+    // target the same URL. Matching on URL *and* title (both values install()
+    // sets when it creates the tile) narrows — but does not eliminate — the
+    // chance of an accidental collision with an unrelated, admin-authored
+    // tile; a tile with both the exact same URL and the exact same title is
+    // exceedingly unlikely to be anything other than one this plugin made.
+    // If `getTitle()` is unavailable on the tile object, fall back to the
+    // prior URL-only match rather than fatal-erroring.
     $tiles_manager = TilesManager::getInstance();
     $tile_url      = Simcard::getListUrl();
+    $tile_title    = Simcard::getMenuName();
 
     foreach (plugin_simviewer_get_helpdesk_profiles() as $profile) {
         foreach ($tiles_manager->getTilesForItem($profile) as $tile) {
-            if ($tile instanceof ExternalPageTile && $tile->getTileUrl() === $tile_url) {
+            if (
+                $tile instanceof ExternalPageTile
+                && $tile->getTileUrl() === $tile_url
+                && (!method_exists($tile, 'getTitle') || $tile->getTitle() === $tile_title)
+            ) {
                 $tiles_manager->deleteTile($tile);
             }
         }
