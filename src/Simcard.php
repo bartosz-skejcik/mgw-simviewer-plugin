@@ -88,6 +88,15 @@ class Simcard extends CommonDBTM
         return $CFG_GLPI['root_doc'] . '/plugins/simviewer/front/simcard.php';
     }
 
+    /** Absolute URL of the CSV export controller (front/export.php). */
+    public static function getExportUrl(): string
+    {
+        /** @var array $CFG_GLPI */
+        global $CFG_GLPI;
+
+        return $CFG_GLPI['root_doc'] . '/plugins/simviewer/front/export.php';
+    }
+
     /**
      * Fetch the entity-scoped, read-only SIM directory rows.
      *
@@ -247,26 +256,41 @@ class Simcard extends CommonDBTM
             $entries[] = $entry;
         }
 
+        $datatable = [
+            'datatable_id'        => 'simviewer_list',
+            // No per-column filter row (the page has its own search box)
+            // and no pager (use_pager auto-resolves to false without
+            // start/limit). Sorting stays disabled: the datatable sort
+            // headers call reloadTab(), which only exists on item tabs,
+            // not on a standalone plugin page.
+            'nofilter'            => true,
+            'nosort'              => true,
+            'columns'             => $columns,
+            'entries'             => $entries,
+            'total_number'        => count($entries),
+            'filtered_number'     => count($entries),
+            'showmassiveactions'  => false,
+        ];
+
+        // Native export button (EXP-01/EXP-02): the core datatable component
+        // only renders the Export anchor when csv_url is non-empty, so this
+        // key is added exclusively when the admin has enabled export. The
+        // export controller mirrors this exact query param so it reads the
+        // same filter as the current view.
+        if (!empty($cfg['enable_export'])) {
+            $csv_url = self::getExportUrl();
+            if ($filter !== '') {
+                $csv_url .= '?filter=' . urlencode($filter);
+            }
+            $datatable['csv_url'] = $csv_url;
+        }
+
         TemplateRenderer::getInstance()->display('@simviewer/list.html.twig', [
             'title'        => self::getMenuName(),
             'filter'       => $filter,
             'self_url'     => self::getListUrl(),
             'phone_source' => $phone['type'],
-            'datatable'    => [
-                'datatable_id'        => 'simviewer_list',
-                // No per-column filter row (the page has its own search box)
-                // and no pager (use_pager auto-resolves to false without
-                // start/limit). Sorting stays disabled: the datatable sort
-                // headers call reloadTab(), which only exists on item tabs,
-                // not on a standalone plugin page.
-                'nofilter'            => true,
-                'nosort'              => true,
-                'columns'             => $columns,
-                'entries'             => $entries,
-                'total_number'        => count($entries),
-                'filtered_number'     => count($entries),
-                'showmassiveactions'  => false,
-            ],
+            'datatable'    => $datatable,
         ]);
     }
 }
