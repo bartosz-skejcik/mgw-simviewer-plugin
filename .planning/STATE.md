@@ -2,18 +2,18 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Natywna nawigacja i eksport
-current_phase: 01
-current_phase_name: Natywna nawigacja
-status: verifying
-stopped_at: Completed 01-02-PLAN.md (checkpoint approved)
-last_updated: "2026-07-21T12:13:05.803Z"
+current_phase: 02
+current_phase_name: Eksport CSV i filtr pustych SIM-ów
+status: executing
+stopped_at: Completed 02-01-PLAN.md
+last_updated: "2026-07-21T13:22:30.801Z"
 last_activity: 2026-07-21
-last_activity_desc: Phase 01 execution started
+last_activity_desc: Phase 02 execution started
 progress:
-  total_phases: 1
+  total_phases: 2
   completed_phases: 1
-  total_plans: 2
-  completed_plans: 2
+  total_plans: 5
+  completed_plans: 3
 ---
 
 # Project State
@@ -23,16 +23,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-07-20)
 
 **Core value:** Pracownik self-service w kilka sekund znajduje służbowy numer telefonu współpracownika — bez dostępu do zasobów, edycji ani wrażliwych pól SIM.
-**Current focus:** Phase 01 — Natywna nawigacja
+**Current focus:** Phase 02 — Eksport CSV i filtr pustych SIM-ów
 
 ## Current Position
 
-Phase: 01 (Natywna nawigacja) — EXECUTING
-Plan: 2 of 2
-Status: Phase complete — ready for verification
-Last activity: 2026-07-21 — Phase 01 execution started
+Phase: 02 (Eksport CSV i filtr pustych SIM-ów) — EXECUTING
+Plan: 2 of 3
+Status: Ready to execute
+Last activity: 2026-07-21 — Phase 02 execution started
 
-Progress: [██████████] 100%
+Progress: [██████░░░░] 60%
 
 ## Performance Metrics
 
@@ -60,6 +60,7 @@ Progress: [██████████] 100%
 |------|----------|-------|-------|
 | Phase 01 P01 | 15min | 3 tasks | 6 files |
 | Phase 01 P02 | 5min | 1 tasks | 0 files |
+| Phase 02 P01 | 15min | 3 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -75,6 +76,8 @@ Recent decisions affecting current work:
 - [Phase ?]: .mo files regenerated locally via tools/po2mo.py (Python 3.13 available on this machine)
 - [Phase ?]: Added plugin_simviewer_get_helpdesk_profiles() helper in hook.php shared by install/uninstall tile lifecycle
 - [Phase ?]: Phase 1 (Natywna nawigacja) verified complete on production glpi.mgw1943.local (GLPI 11.0.4): SC1-SC4 confirmed by human browser UAT 2026-07-21 — native tile, JS-injection removal, no v1.0 menu regression, install idempotency, right-scoping all passed
+- [Phase ?]: enable_export default flip and show_unassigned default-narrowing both promoted per 2026-07-20 decisions (no re-escalation needed)
+- [Phase ?]: Migration marker export_default_migrated is the single source of truth for 'already migrated' (not a version-string comparison)
 
 ### Pending Todos
 
@@ -103,6 +106,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-21T12:13:05.787Z
-Stopped at: Completed 01-02-PLAN.md (checkpoint approved)
+Last session: 2026-07-21T13:22:30.783Z
+Stopped at: Completed 02-01-PLAN.md
 Resume file: None

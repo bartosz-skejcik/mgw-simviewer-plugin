@@ -15,11 +15,11 @@ Requirements for milestone v1.1 „Natywna nawigacja i eksport". Each maps to ro
 ### Eksport (EXP)
 
 - [ ] **EXP-01**: Uprawniony użytkownik pobiera aktualnie widoczny katalog (po filtrze i entity scopingu, bez pól wrażliwych) jako CSV natywnym przyciskiem eksportu datatable (`csv_url`)
-- [ ] **EXP-02**: Eksport jest sterowany opcją `enable_export` (domyślnie WŁĄCZONY — decyzja 2026-07-20); wyłączenie ukrywa przycisk i blokuje endpoint eksportu po stronie serwera
+- [x] **EXP-02**: Eksport jest sterowany opcją `enable_export` (domyślnie WŁĄCZONY — decyzja 2026-07-20); wyłączenie ukrywa przycisk i blokuje endpoint eksportu po stronie serwera
 
 ### Tabela (TBL)
 
-- [ ] **TBL-01**: SIM-y bez przypisanego użytkownika są domyślnie ukryte; nowa opcja konfiguracji `show_unassigned` (domyślnie 0) przywraca pełną listę
+- [x] **TBL-01**: SIM-y bez przypisanego użytkownika są domyślnie ukryte; nowa opcja konfiguracji `show_unassigned` (domyślnie 0) przywraca pełną listę
 
 ## Future Requirements
 
@@ -47,8 +47,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | NAV-01 | Phase 1 | Complete |
 | NAV-02 | Phase 1 | Complete |
 | EXP-01 | Phase 2 | Pending |
-| EXP-02 | Phase 2 | Pending |
-| TBL-01 | Phase 2 | Pending |
+| EXP-02 | Phase 2 | Complete |
+| TBL-01 | Phase 2 | Complete |
 
 **Coverage:**
 
