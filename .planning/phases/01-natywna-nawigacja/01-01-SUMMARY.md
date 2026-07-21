@@ -159,3 +159,7 @@ None - no external service configuration required. Deployment is the existing gi
 ---
 *Phase: 01-natywna-nawigacja*
 *Completed: 2026-07-21*
+
+## Self-Check: PASSED
+
+All files (`hook.php`, `setup.php`, `src/Config.php`, `locales/pl_PL.po`, `locales/en_GB.po`, `locales/pl_PL.mo`, `locales/en_GB.mo`) confirmed present on disk; `public/js/nav-inject.js` confirmed deleted; all four commits (`06aa47f`, `bb6afdd`, `fd3f91c`, `98b6c17`) confirmed in `git log`.
