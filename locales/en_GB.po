@@ -59,6 +59,12 @@ msgstr "Enable CSV export"
 msgid "Show SIMs without assigned user"
 msgstr "Show SIMs without assigned user"
 
+msgid "Restrict to lines (blank = all lines)"
+msgstr "Restrict to lines (blank = all lines)"
+
+msgid "Line #%d (removed)"
+msgstr "Line #%d (removed)"
+
 msgid "Phone number source"
 msgstr "Phone number source"
 

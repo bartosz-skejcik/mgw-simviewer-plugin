@@ -76,6 +76,11 @@ class Config extends CommonDBTM
             // production are unassigned and clutter the catalog); admins can
             // restore the full list via this Yes/No config option.
             'show_unassigned' => '0',
+            // Restrict the directory to specific Lines (tariff plans): only SIMs
+            // whose lines_id is listed here are shown. Empty = every line, the
+            // pre-1.3.0 behaviour. Stored as a comma-separated list of
+            // glpi_lines IDs because glpi_configs values are plain strings.
+            'lines_filter'  => '',
             // 'fields' (Fields plugin custom field) or 'line' (native Line object).
             'phone_source'  => 'fields',
             // Empty fields_table => auto-detect the Fields plugin container table
@@ -119,6 +124,81 @@ class Config extends CommonDBTM
         if (!empty($keys)) {
             (new GlpiConfig())->deleteConfigurationValues(self::CONTEXT, $keys);
         }
+    }
+
+    /**
+     * Line (tariff plan) IDs the directory is restricted to.
+     *
+     * @param array<string, string> $cfg
+     *
+     * @return list<int> Empty list = no restriction (every line is shown).
+     */
+    public static function getLineIds(array $cfg): array
+    {
+        return self::parseLineIds($cfg['lines_filter'] ?? '');
+    }
+
+    /**
+     * Normalise a stored/posted line filter into a list of positive, unique IDs.
+     *
+     * @param array<int, mixed>|string $raw
+     *
+     * @return list<int>
+     */
+    private static function parseLineIds($raw): array
+    {
+        if (!is_array($raw)) {
+            $raw = trim((string) $raw);
+            $raw = $raw === '' ? [] : explode(',', $raw);
+        }
+
+        $ids = [];
+        foreach ($raw as $value) {
+            $id = (int) trim((string) $value);
+            if ($id > 0 && !in_array($id, $ids, true)) {
+                $ids[] = $id;
+            }
+        }
+
+        return $ids;
+    }
+
+    /**
+     * Selectable Lines for the config form, keyed by ID.
+     *
+     * @param array<string, string> $cfg
+     *
+     * @return array<int, string>
+     */
+    public static function getLineOptions(array $cfg): array
+    {
+        /** @var \DBmysql $DB */
+        global $DB;
+
+        $options = [];
+
+        if ($DB->tableExists('glpi_lines')) {
+            $iterator = $DB->request([
+                'SELECT' => ['id', 'name'],
+                'FROM'   => 'glpi_lines',
+                'WHERE'  => ['is_deleted' => 0],
+                'ORDER'  => 'name',
+            ]);
+            foreach ($iterator as $row) {
+                $options[(int) $row['id']] = (string) $row['name'];
+            }
+        }
+
+        // A configured line that has since been deleted must stay in the list:
+        // otherwise the form would show it as unselected and the next save
+        // would silently drop a restriction that is still being applied.
+        foreach (self::getLineIds($cfg) as $id) {
+            if (!isset($options[$id])) {
+                $options[$id] = sprintf(__('Line #%d (removed)', 'simviewer'), $id);
+            }
+        }
+
+        return $options;
     }
 
     /**
@@ -197,6 +277,13 @@ class Config extends CommonDBTM
             $input[$bool] = !empty($input[$bool]) ? '1' : '0';
         }
 
+        // The multi-select posts an array of IDs, or the empty string of its
+        // companion hidden input when nothing is selected. glpi_configs stores
+        // plain strings, so collapse either shape to a comma-separated list.
+        if (array_key_exists('lines_filter', $input)) {
+            $input['lines_filter'] = implode(',', self::parseLineIds($input['lines_filter']));
+        }
+
         return $input;
     }
 
@@ -232,6 +319,15 @@ class Config extends CommonDBTM
 
         echo "<tr class='tab_bg_1'><td>" . __s('Show SIMs without assigned user', 'simviewer') . "</td><td>";
         Dropdown::showYesNo('show_unassigned', $cfg['show_unassigned'], -1, ['readonly' => !$can_edit]);
+        echo "</td></tr>";
+
+        // Line (tariff plan) restriction: leaving it empty keeps every line.
+        echo "<tr class='tab_bg_1'><td>" . __s('Restrict to lines (blank = all lines)', 'simviewer') . "</td><td>";
+        Dropdown::showFromArray('lines_filter', self::getLineOptions($cfg), [
+            'values'   => self::getLineIds($cfg),
+            'multiple' => true,
+            'readonly' => !$can_edit,
+        ]);
         echo "</td></tr>";
 
         // Phone number source.

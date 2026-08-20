@@ -167,6 +167,17 @@ class Simcard extends CommonDBTM
             $where[] = ["{$isc}.users_id" => ['>', 0]];
         }
 
+        // Line (tariff plan) restriction, enforced in SQL for the same reason
+        // as the two filters above: front/simcard.php and front/export.php
+        // share this one accessor, so the view and the CSV can never drift.
+        // Filter on the base table's lines_id so the restriction holds
+        // regardless of whether glpi_lines was joined for the phone number
+        // (it only is when phone_source is 'line'). Empty config = every line.
+        $line_ids = Config::getLineIds($cfg);
+        if (!empty($line_ids)) {
+            $where["{$isc}.lines_id"] = $line_ids;
+        }
+
         $iterator = $DB->request([
             'SELECT'    => $select,
             'DISTINCT'  => true,
